@@ -10,30 +10,16 @@ A Qt-based medical imaging viewer for NifTI files using VTK.
 - Dark theme optimized for medical imaging
 
 ## Quick Start
-1. Download `NifTIViewer.exe` from [Releases](https://github.com/akhilG05/NifTI-Volume-Loader-Qt-VTK/releases)
+1. Download `NifTIViewer.exe` from [Releases](https://github.com/YOUR_USERNAME/NifTI-Volume-Loader-Qt-VTK/releases)
 2. Run the executable
 3. Click "Browse File" to load a NIfTI file
 4. Use controls on the right panel for navigation
 
 ## Build from Source
 
-### Prerequisites
-- Visual Studio 2022
-- Qt 6.9.1
-- VTK 9.3.1 (with Qt support)
-
-### Build Steps
-```bash
-mkdir build
-cd build
-cmake ..
-cmake --build . --config Release
-```
+For detailed build instructions, see [BUILD.md](BUILD.md).
 
 ## Architecture
 - `MainWindow`: Qt GUI and user interface
 - `VolumeRenderer`: VTK rendering and image display
 - `FileManager`: NIfTI file loading and management
-
-## License
-MIT License

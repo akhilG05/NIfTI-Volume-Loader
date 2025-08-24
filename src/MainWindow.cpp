@@ -1,14 +1,22 @@
 #include "MainWindow.h"
+
+// Qt Core and Widgets for application framework
 #include <QApplication>
 #include <QMenuBar>
 #include <QToolBar>
 #include <QStatusBar>
+
+// Qt Dialogs for user interaction
 #include <QFileDialog>
 #include <QMessageBox>
+
+// Qt Layouts for organizing the interface
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QGridLayout>
 #include <QSplitter>
+
+// Qt Widgets for the user interface
 #include <QGroupBox>
 #include <QLabel>
 #include <QPushButton>
@@ -17,43 +25,47 @@
 #include <QComboBox>
 #include <QProgressBar>
 #include <QTextEdit>
+
+// Qt Actions for menu and toolbar
 #include <QAction>
 #include <QIcon>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , m_fileManager(nullptr)
-    , m_volumeRenderer(nullptr)
-    , m_browseButton(nullptr)
-    , m_filePathLabel(nullptr)
-    , m_renderWidget(nullptr)
-    , m_controlPanel(nullptr)
-    , m_orientationCombo(nullptr)
-    , m_sliceSlider(nullptr)
-    , m_sliceSpinBox(nullptr)
-    , m_sliceLabel(nullptr)
-    , m_zoomInButton(nullptr)
-    , m_zoomOutButton(nullptr)
-    , m_resetViewButton(nullptr)
-    , m_infoDisplay(nullptr)
-    , m_progressBar(nullptr)
-    , m_statusLabel(nullptr)
-    , m_mainSplitter(nullptr)
-    , m_centralWidget(nullptr)
-    , m_fileLoaded(false)
+    // Initialize all member pointers to nullptr for safety
+    , m_fileManager(nullptr)      // Will be created in setupUI()
+    , m_volumeRenderer(nullptr)   // Will be created in setupUI()
+    , m_browseButton(nullptr)     // Will be created in setupUI()
+    , m_filePathLabel(nullptr)    // Will be created in setupUI()
+    , m_renderWidget(nullptr)     // Will be created in setupUI()
+    , m_controlPanel(nullptr)     // Will be created in setupUI()
+    , m_orientationCombo(nullptr) // Will be created in setupUI()
+    , m_sliceSlider(nullptr)      // Will be created in setupUI()
+    , m_sliceSpinBox(nullptr)     // Will be created in setupUI()
+    , m_sliceLabel(nullptr)       // Will be created in setupUI()
+    , m_zoomInButton(nullptr)     // Will be created in setupUI()
+    , m_zoomOutButton(nullptr)    // Will be created in setupUI()
+    , m_resetViewButton(nullptr)  // Will be created in setupUI()
+    , m_infoDisplay(nullptr)      // Will be created in setupUI()
+    , m_progressBar(nullptr)      // Will be created in setupUI()
+    , m_statusLabel(nullptr)      // Will be created in setupUI()
+    , m_mainSplitter(nullptr)     // Will be created in setupUI()
+    , m_centralWidget(nullptr)    // Will be created in setupUI()
+    , m_fileLoaded(false)         // Start with no file loaded
 {
     setWindowTitle("NifTI Volume Loader");
-    setMinimumSize(1000, 700);
+    setMinimumSize(1000, 700);  // Ensure adequate space for medical imaging interface
     
-    // Initialize core components
-    m_fileManager = new FileManager(this);
-    m_volumeRenderer = new VolumeRenderer(this);
+    // Initialize core components that handle file operations and rendering
+    m_fileManager = new FileManager(this);      // Manages NIfTI file loading and parsing
+    m_volumeRenderer = new VolumeRenderer(this); // Handles VTK-based image display
     
-    setupUI();
-    connectSignals();
-    enableControls(false);
+    // Set up the complete user interface
+    setupUI();        // Create all UI elements and layouts
+    connectSignals(); // Wire up all signal-slot connections
+    enableControls(false); // Start with controls disabled (no file loaded)
     
-    // Apply dark theme (only theme supported)
+    // Apply professional dark theme optimized for medical imaging
     applyDarkTheme();
 }
 
@@ -61,21 +73,37 @@ MainWindow::~MainWindow()
 {
 }
 
+/**
+ * Sets up the complete user interface
+ * 
+ * This method orchestrates the creation of all UI components:
+ * 1. Menu bar with File and About menus
+ * 2. Toolbar (currently empty for clean interface)
+ * 3. Status bar with progress indicator
+ * 4. Main content area with render widget and control panel
+ */
 void MainWindow::setupUI()
 {
-    setupMenuBar();
-    setupToolBar();
-    setupStatusBar();
-    setupCentralWidget();
+    setupMenuBar();      // Create application menu bar
+    setupToolBar();      // Create toolbar (currently empty)
+    setupStatusBar();    // Create status bar with progress
+    setupCentralWidget(); // Create main content area
 }
 
+/**
+ * Creates the application menu bar with File and About menus
+ * 
+ * The File menu provides standard file operations, while the About menu
+ * gives users information about the application and its capabilities.
+ */
 void MainWindow::setupMenuBar()
 {
     QMenuBar *menuBar = this->menuBar();
     
-    // File menu
+    // File menu - standard file operations
     QMenu *fileMenu = menuBar->addMenu("&File");
     
+    // Open action with standard Ctrl+O shortcut
     QAction *openAction = new QAction("&Open NifTI File...", this);
     openAction->setShortcut(QKeySequence::Open);
     connect(openAction, &QAction::triggered, this, &MainWindow::browseFile);
@@ -83,14 +111,16 @@ void MainWindow::setupMenuBar()
     
     fileMenu->addSeparator();
     
+    // Exit action with standard Ctrl+Q shortcut
     QAction *exitAction = new QAction("E&xit", this);
     exitAction->setShortcut(QKeySequence::Quit);
     connect(exitAction, &QAction::triggered, this, &QWidget::close);
     fileMenu->addAction(exitAction);
     
-    // About menu
+    // About menu - application information
     QMenu *aboutMenu = menuBar->addMenu("&About");
     
+    // About action with detailed application description
     QAction *aboutAction = new QAction("&About NifTI Volume Loader", this);
     connect(aboutAction, &QAction::triggered, this, [this](){
         QMessageBox::about(this, "About NifTI Volume Loader", 

@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+// Qt Widgets for the user interface
 #include <QMainWindow>
 #include <QLabel>
 #include <QPushButton>
@@ -16,9 +17,18 @@
 #include <QSplitter>
 #include <QTextEdit>
 
+// Our custom classes for file management and rendering
 #include "FileManager.h"
 #include "VolumeRenderer.h"
 
+/**
+ * Main application window for the NifTI Volume Loader
+ * 
+ * This class manages the entire user interface including:
+ * - File selection and loading
+ * - Image display and navigation controls
+ * - Status updates and progress indication
+ */
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -28,72 +38,74 @@ public:
     ~MainWindow();
 
 private slots:
-    void browseFile();
-    void onFileLoadingStarted(const QString &fileName);
-    void onFileLoadingProgress(int percentage);
-    void onFileLoadingCompleted(const QString &fileName);
-    void onFileLoadingError(const QString &errorMessage);
+    // File management slots - handle file operations and loading states
+    void browseFile();                                    // Open file dialog and initiate loading
+    void onFileLoadingStarted(const QString &fileName);   // Called when file loading begins
+    void onFileLoadingProgress(int percentage);           // Update progress bar during loading
+    void onFileLoadingCompleted(const QString &fileName); // Handle successful file load
+    void onFileLoadingError(const QString &errorMessage); // Handle loading errors
     
-    void onSliceChanged(int slice);
-    void onOrientationChanged();
-    void onSliceSliderChanged(int value);
+    // Image navigation slots - respond to user interactions
+    void onSliceChanged(int slice);                      // Update UI when slice changes
+    void onOrientationChanged();                         // Handle view orientation changes
+    void onSliceSliderChanged(int value);                // Respond to slice slider changes
     
-    // Navigation controls
-    void zoomIn();
-    void zoomOut();
-    void resetView();
+    // Navigation controls - manipulate the 3D view
+    void zoomIn();        // Zoom into the image (closer view)
+    void zoomOut();       // Zoom out from the image (wider view)
+    void resetView();     // Reset camera to fit the entire image
 
 private:
-    void setupUI();
-    void setupMenuBar();
-    void setupToolBar();
-    void setupStatusBar();
-    void setupCentralWidget();
-    void setupControlPanel();
+    // UI setup methods - create and organize the interface
+    void setupUI();           // Main UI setup coordinator
+    void setupMenuBar();      // Create application menu bar
+    void setupToolBar();      // Create toolbar (currently empty)
+    void setupStatusBar();    // Create status bar with progress indicator
+    void setupCentralWidget(); // Create main content area
+    void setupControlPanel();  // Create right-side control panel
     
-    void connectSignals();
-    void updateSliceControls();
-    void updateFileInfo();
-    void enableControls(bool enabled);
-    void applyDarkTheme();
+    // Utility methods - handle UI updates and connections
+    void connectSignals();      // Connect all signal-slot relationships
+    void updateSliceControls(); // Update slice navigation controls
+    void updateFileInfo();      // Update file information display
+    void enableControls(bool enabled); // Enable/disable UI controls based on file state
+    void applyDarkTheme();      // Apply professional dark theme styling
 
-    // Core components
-    FileManager *m_fileManager;
-    VolumeRenderer *m_volumeRenderer;
+    // Core components - main application logic
+    FileManager *m_fileManager;      // Handles NIfTI file loading and parsing
+    VolumeRenderer *m_volumeRenderer; // Manages VTK rendering and image display
     
-    // UI Components
-    QPushButton *m_browseButton;
-    QLabel *m_filePathLabel;
-    QWidget *m_renderWidget;
+    // UI Components - main interface elements
+    QPushButton *m_browseButton;    // Button to open file selection dialog
+    QLabel *m_filePathLabel;        // Displays the currently loaded file path
+    QWidget *m_renderWidget;        // VTK rendering widget for image display
     
-    // Control panel
-    QGroupBox *m_controlPanel;
-    QComboBox *m_orientationCombo;
-    QSlider *m_sliceSlider;
-    QSpinBox *m_sliceSpinBox;
-    QLabel *m_sliceLabel;
+    // Control panel - right-side navigation and settings
+    QGroupBox *m_controlPanel;      // Container for all control widgets
+    QComboBox *m_orientationCombo;  // Dropdown to select view orientation (Axial/Sagittal/Coronal)
+    QSlider *m_sliceSlider;         // Slider for navigating through image slices
+    QSpinBox *m_sliceSpinBox;       // Numeric input for precise slice selection
+    QLabel *m_sliceLabel;           // Shows current slice position and total count
     
-
+    // Navigation controls - image manipulation
+    QPushButton *m_zoomInButton;    // Zoom into the image
+    QPushButton *m_zoomOutButton;   // Zoom out from the image
+    QPushButton *m_resetViewButton; // Reset camera to default view
     
-    // Navigation controls
-    QPushButton *m_zoomInButton;
-    QPushButton *m_zoomOutButton;
-    QPushButton *m_resetViewButton;
+    // Information display - file metadata
+    QTextEdit *m_infoDisplay;       // Shows file information (dimensions, spacing, origin)
     
-    // Information display
-    QTextEdit *m_infoDisplay;
+    // Status and progress - user feedback
+    QProgressBar *m_progressBar;    // Shows file loading progress
+    QLabel *m_statusLabel;          // Displays current application status
     
-    // Status and progress
-    QProgressBar *m_progressBar;
-    QLabel *m_statusLabel;
+    // Layout - interface organization
+    QSplitter *m_mainSplitter;      // Divides render area and control panel
+    QWidget *m_centralWidget;       // Main content container
     
-    // Layout
-    QSplitter *m_mainSplitter;
-    QWidget *m_centralWidget;
-    
-    // Current state
-    QString m_currentFilePath;
-    bool m_fileLoaded;
+    // Current state - application data
+    QString m_currentFilePath;      // Path to the currently loaded file
+    bool m_fileLoaded;              // Whether a file is currently loaded
 };
 
 #endif // MAINWINDOW_H

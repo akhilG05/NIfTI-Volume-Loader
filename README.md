@@ -7,7 +7,8 @@ A Qt-based medical imaging viewer for NifTI files using VTK.
 - Multi-planar viewing (Axial, Sagittal, Coronal)
 - Slice navigation with slider controls
 - Zoom in/out and reset view
-- Dark theme optimized for medical imaging
+- Error handling and user feedback
+- Comprehensive file metadata display
 
 ## Quick Start
 1. Download `NifTIViewer.exe` from [Releases](https://github.com/akhilG05/NifTI-Volume-Loader/releases)
